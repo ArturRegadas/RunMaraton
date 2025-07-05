@@ -1,0 +1,1 @@
+print("Equipe C ganhou")
