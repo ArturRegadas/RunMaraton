@@ -108,14 +108,4 @@ def run_with_limits_windows(
         # Você pode querer logar e para debug: print(str(e))
         return INTERNAL_ERROR
 
-status = run_with_limits_windows(
-    executable=r'C:\Users\ahlre\Documents\GitProjects\RunMaraton\run.py',
-    input_file=r'C:\Users\ahlre\Documents\GitProjects\RunMaraton\submissions\input',
-    output_file=r'C:\Users\ahlre\Documents\GitProjects\RunMaraton\submissions\output',
-    timelimit=1.0,
-    number_of_repetitions=10,
-    memory_limit_MB=64,
-    output_limit_KB=32
-)
-print("Resultado:", status)
 

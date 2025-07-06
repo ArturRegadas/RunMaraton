@@ -110,9 +110,9 @@ def run_with_limits_linux(
 def main():
     current_path = ""
     status = run_with_limits_linux(
-        executable=current_path+'/run.py',
-        input_file=current_path+'/submissions/input',
-        output_file=current_path+'/submissions/output',
+        executable=os.path.join(current_path,'run.py'),
+        input_file=os.path.join(current_path,'submissions','input'),
+        output_file=os.path.join(current_path,'submissions','output'),
         timelimit=1.0,
         number_of_repetitions=10,
         memory_limit_MB=64,

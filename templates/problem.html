@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-br" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Juiz Online - Estilo LeetCode</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              primary: '#1A1A1A',
+              accent: '#F59E0B',
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      html, body {
+        height: 100%;
+        margin: 0;
+      }
+      #editor {
+        height: 400px;
+        width: 100%;
+      }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.44.0/min/vs/loader.js"></script>
+  </head>
+  <body class="bg-gray-100 dark:bg-zinc-900 text-gray-900 dark:text-white">
+    <div class="max-w-7xl mx-auto p-4">
+      <header class="flex items-center justify-between mb-6">
+        <h1 class="text-2xl font-bold">Juiz Online</h1>
+        <button onclick="toggleTheme()" class="px-4 py-2 bg-zinc-800 text-white rounded">
+          Alternar Tema
+        </button>
+      </header>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <!-- Descrição do problema -->
+        <section class="lg:col-span-1 bg-white dark:bg-zinc-800 rounded-xl p-4 shadow">
+          <h2 class="text-xl font-bold mb-2">Soma de Dois Números</h2>
+          <p class="text-sm text-gray-500 mb-4">Dificuldade: Fácil</p>
+          <p>
+            Dado dois inteiros, retorne sua soma.
+          </p>
+          <pre class="mt-4 bg-zinc-100 dark:bg-zinc-700 p-2 rounded text-sm"><code>
+Entrada: 1 2  
+Saída: 3
+          </code></pre>
+        </section>
+
+        <!-- Editor + Console -->
+        <section class="lg:col-span-2 flex flex-col gap-4" >
+          <div id="editor" class="rounded border border-zinc-300 dark:border-zinc-700" style="padding: 10px;background-color: #1e1e1e;"></div>
+
+          <button onclick="submitCode()" class="self-start bg-accent text-white px-6 py-2 rounded hover:bg-yellow-500">
+            Submeter
+          </button>
+
+          <div class="bg-zinc-100 dark:bg-zinc-800 p-4 rounded shadow">
+            <h3 class="font-semibold">Resultado</h3>
+            <pre id="output" class="text-sm text-green-500 mt-2">Nenhuma submissão ainda.</pre>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <script>
+      // Tema escuro/claro
+      function toggleTheme() {
+        document.documentElement.classList.toggle("dark");
+      }
+
+      // Editor Monaco
+      require.config({ paths: { vs: "https://cdn.jsdelivr.net/npm/monaco-editor@0.44.0/min/vs" } });
+      require(["vs/editor/editor.main"], function () {
+        window.editor = monaco.editor.create(document.getElementById("editor"), {
+          value: "// Digite seu código aqui\nint soma(int a, int b) {\n  return a + b;\n}",
+          language: "cpp",
+          theme: "vs-dark",
+          automaticLayout: true,
+        });
+      });
+
+      // Submissão fake
+      function submitCode() {
+        const code = editor.getValue();
+        const output = document.getElementById("output");
+
+        // Simula envio ao backend
+        output.textContent = "Submetendo...";
+
+        setTimeout(() => {
+          if (code.includes("return a + b")) {
+            output.textContent = "✅ Aceito! (tempo: 0.01s)";
+            output.classList.remove("text-red-500");
+            output.classList.add("text-green-500");
+          } else {
+            output.textContent = "❌ Resposta Incorreta.";
+            output.classList.remove("text-green-500");
+            output.classList.add("text-red-500");
+          }
+        }, 1000);
+      }
+    </script>
+  </body>
+</html>

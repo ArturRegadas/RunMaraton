@@ -19,8 +19,9 @@ def RunSubimission(code, lenguage, problem, user):
         return 5
     
     current_path = os.getcwd()
-    problem_path = current_path+"/problems/"+problem
-    tle_path = problem_path+"/limits.json"
+    problem_path = os.path.join(current_path, "problems", problem)
+    #pass
+    tle_path = os.path.join(problem_path,"limits.json")
     print(tle_path)
     with open(tle_path, 'r', encoding="utf-8") as file:
         data = json.load(file)
@@ -36,8 +37,8 @@ def RunSubimission(code, lenguage, problem, user):
 
     return Run(
         file_path,
-        current_path+"/problems/"+problem+"/input",
-        current_path+"/problems/"+problem+"/output",
+        os.path.join(current_path, "problems", problem, "input",),
+        os.path.join(current_path, "problems", problem, "output",),
         data["time"],
         data["number_of_repetitions"],
         data["memory_limit_MB"],
@@ -56,17 +57,16 @@ def Run(file_path,
     
     import os
     current_path = os.getcwd()
-    caminho = current_path+"/problems/2024IJ/input"
 
 
     if os.name == 'nt':
         from compareWin import run_with_limits_windows
-        for f in os.listdir(caminho):
-            if os.path.isfile(os.path.join(caminho, f)):
+        for f in os.listdir(input_path):
+            if os.path.isfile(os.path.join(input_path, f)):
                 status = run_with_limits_windows(
                     executable=file_path,
-                    input_file=input_path,
-                    output_file=output_path,
+                    input_file=os.path.join(input_path, f),
+                    output_file=os.path.join(output_path, f),
                     timelimit=time_limit,
                     number_of_repetitions=number_of_repetitions,
                     memory_limit_MB=memory_limit_MB,
@@ -83,8 +83,8 @@ def Run(file_path,
             if os.path.isfile(os.path.join(caminho, f)):
                 status = run_with_limits_linux(
                     executable=file_path,
-                    input_file=input_path+'/'+f,
-                    output_file=output_path+'/'+f,
+                    input_file=os.path.join(input_path, f),
+                    output_file=os.path.join(output_path, f),
                     timelimit=time_limit,
                     number_of_repetitions=number_of_repetitions,
                     memory_limit_MB=memory_limit_MB,
@@ -95,6 +95,23 @@ def Run(file_path,
                     return status
         return 0
 
+
+def getProblems(target):
+    current_path = os.getcwd()
+    ans = []
+    for j in os.listdir(os.path.join(current_path, "problems")):
+        if target == j[:5]:
+            ans.append(j)
+    return sorted(ans)
+
+def getNameProblem(id):
+    names={"2024LJ":"Jogo da Bocha"}
+    return names[id]
+
+def getDificult(id):
+    dif={"2024LJ":1}
+
+    return dif[id]
 
 
 if (__name__=="__main__"):
