@@ -1,5 +1,7 @@
 from flask import *
-from runSubmissions import RunSubimission, getProblems, getNameProblem, getDificult
+from runSubmissions import RunSubimission
+from support.getInfo import getProblems, getNameProblem, getDificult
+
 
 users={
     "adm":"adm"
@@ -7,8 +9,14 @@ users={
 }
 app = Flask(__name__)
 
-BASE_DIR = "submissions"
-SCRIPTS_DIR = "scripts"
+
+def verifyLogin():
+    username = request.cookies.get("username")
+    password = request.cookies.get("password")
+    if(not username or not password or not username in users or users[username] != password):
+        return redirect(url_for("home"))
+
+
 
 @app.route("/submit", methods=["POST"])
 def submit():
@@ -16,12 +24,20 @@ def submit():
     lenguage = request.form["lenguage"]
     status = RunSubimission(code, lenguage, "2024IJ", "Artur")
     return str(status)
-@app.route("/problem/<id_proble>")
+@app.route("/problem/<id_problem>")
 def problem(id_problem):
-    return ""
+    verifyLogin()
+    return render_template(
+        "problem.html",
+        filePdf="InterIF2025_Classificados_FaseFinal.pdf",
+        code="",
+        ended="",
+        result=""
+    )
 
 @app.route("/tests/<test>")
 def tests(test):
+    verifyLogin()
     problems = getProblems(test)
     ans= []
     for i in problems:
@@ -39,11 +55,10 @@ def login():
         response.set_cookie("password", password, max_age=60*120)
         return response
     return render_template("login.html", msg="incorrect user or password")
-    
-
 
 @app.route("/")
 def home():
+    verifyLogin()
     tests = [
         { "id": "2024F", "title": "INTERIF 2024 - Fase Final", "questoes": 10 },
         { "id": "2024L", "title": "INTERIF 2024 - Fase Local", "questoes": 10 },
@@ -59,6 +74,19 @@ def home():
                 return render_template("index.html",case="Questoes" ,tests = tests)
 
     return render_template("login.html", msg="")
+
+@app.route("/createUser", methods=["POST"])
+def createUser():
+    newUser = request.form["username"]
+    newPassword = request.form["password"]
+    if newUser in users:
+        return render_template("createUser.html", msg="usuario ja existe")
+    users[newUser] = newPassword
+    return redirect(url_for("home"))
+
+@app.route("/newUser")
+def newUser():
+    return render_template("createUser.html", msg="")
 
 @app.route("/logout")
 def logout():
