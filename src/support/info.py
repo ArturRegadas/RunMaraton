@@ -8,5 +8,15 @@ name = {
     "2024LG":"Notacao Forsyth-Edwards",
     "2024LH":"Ponte que Partiu",
     "2024LI":"Campeonato de Boliche",
-    "2024LJ":"Salto em Distância"
+    "2024LJ":"Salto em Distância",
+    "2024FA":"Sem Dinheiro para Compras",
+    "2024FB":"Banco Comunitário",
+    "2024FC":"Chocolate Mineiro",
+    "2024FD":"IFSP Binary Coin",
+    "2024FE":"Defeito no Teclado",
+    "2024FF":"Radar em Interifnópolis",
+    "2024FG":"Que horas são?",
+    "2024FH":"Wi-Fi Boa Vizinhança",
+    "2024FI":"Foca em Mim",
+    "2024FJ":"Torneio de Robótica"
 }

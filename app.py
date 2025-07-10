@@ -115,6 +115,7 @@ def problem(id_problem):
         username=username,
         filePdf=f"{id_problem}.pdf",
         problemId=id_problem,
+        name_problem = getNameProblem(id_problem),
         ended='FINALIZADO' if id_problem in users[username]["finalized"] else ""
     )
 

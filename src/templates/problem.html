@@ -45,7 +45,10 @@
   <body class="bg-gray-100 dark:bg-zinc-900 text-gray-900 dark:text-white">
     <div class="max-w-7xl mx-auto p-4">
       <header class="flex items-center justify-between mb-6">
-        <h1 class="text-2xl font-bold" id="problemH1">{{problemId}}</h1>
+        <div style="display: flex;">
+          <h1 class="text-2xl font-bold" id="problemH1">{{problemId}}-</h1>
+          <h1 class="text-2xl font-bold">{{name_problem}}</h1>
+        </div>
         <h1 style="color:#00d062;">{{ended}}</h1>
         <select id="language-select"
               class="px-3 py-2 rounded border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-gray-900 dark:text-white"
@@ -175,6 +178,8 @@
             answer.style.color = data.color;
             document.getElementById("see_details").className ="";
             document.getElementById("see_details").innerHTML="";
+            document.getElementById("user-output").textContent = "";
+            document.getElementById("expected-output").textContent = "";
             if(data.status == "WRONG ANSWER" || data.status == "PRESENTATION ERROR"){
               document.getElementById("see_details").className ="self-start bg-accent text-white px-6 py-2 rounded hover:bg-yellow-500"
               document.getElementById("see_details").innerHTML="Ver Detalhes"
@@ -189,6 +194,8 @@
             }
           })
           .catch(err => {
+            document.getElementById("see_details").className ="";
+            document.getElementById("see_details").innerHTML="";
             document.getElementById("user-output").textContent = "Erro ao submeter.";
             document.getElementById("expected-output").textContent = "";
             console.error(err);
