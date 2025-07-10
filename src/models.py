@@ -1,12 +1,13 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
+import os
 from src.support.dbInfo import user, password, DBname
 
 app = Flask(__name__)
 
 
 
-app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql+psycopg2://{user}:{password}@db:5432/{DBname}'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 

@@ -27,6 +27,18 @@
         height: 400px;
         width: 100%;
       }
+
+      .confetti {
+        position: fixed;
+        width: 10px;
+        height: 10px;
+        background-color: #fce18a;
+        opacity: 0.9;
+        z-index: 9999;
+        pointer-events: none;
+        will-change: transform, opacity;
+        border-radius: 3px;
+      }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.44.0/min/vs/loader.js"></script>
   </head>
@@ -169,6 +181,12 @@
               document.getElementById("user-output").textContent = data.user_output;
               document.getElementById("expected-output").textContent = data.expected_output;
             }
+            else if (data.status=="ACCEPT"){
+              createConfetti()
+              createConfetti()
+              createConfetti()
+              createConfetti()
+            }
           })
           .catch(err => {
             document.getElementById("user-output").textContent = "Erro ao submeter.";
@@ -181,6 +199,54 @@
               document.getElementById("loading-overlay").classList.add("hidden");
             }, 800); // atraso para deixar mais suave
           });
+        }
+
+        function createConfetti() {
+          const colors = ['#fce18a', '#ff726d', '#b48def', '#f4306d', '#3d94f6'];
+          const count = 30;
+          const vw = window.innerWidth;
+          const vh = window.innerHeight;
+
+          for(let i = 0; i < count; i++) {
+            const confetti = document.createElement('div');
+            confetti.classList.add('confetti');
+            confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+
+            // Escolhe lado aleatório: 0 = esquerda, 1 = direita
+            const side = Math.random() < 0.5 ? 'left' : 'right';
+            const startTop = Math.random() * vh * 0.8 + vh * 0.1; // de 10% até 90% da altura
+
+            // Posiciona confete na lateral
+            confetti.style.top = `${startTop}px`;
+            confetti.style[side] = '0px';
+
+            document.body.appendChild(confetti);
+
+            // Distância que o confete vai se mover para dentro da tela (horizontal)
+            const horizontalMove = (side === 'left' ? 1 : -1) * (50 + Math.random() * 150);
+
+            // Distância que o confete vai cair (vertical)
+            const verticalMove = 150 + Math.random() * 300;
+
+            // Tempo da animação
+            const animationDuration = 2500 + Math.random() * 1500;
+
+            confetti.animate([
+              { transform: 'translate(0, 0) rotate(0deg)', opacity: 1 },
+              { 
+                transform: `translate(${horizontalMove}px, ${verticalMove}px) rotate(${Math.random() * 360}deg)`,
+                opacity: 0
+              }
+            ], {
+              duration: animationDuration,
+              easing: 'ease-out',
+              fill: 'forwards'
+            });
+
+            setTimeout(() => {
+              confetti.remove();
+            }, animationDuration);
+          }
         }
 
 

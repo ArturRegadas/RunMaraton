@@ -84,8 +84,8 @@ def Run(file_path,
 
     elif os.name == 'posix':
         from src.compareLin import run_with_limits_linux
-        for f in os.listdir(caminho):
-            if os.path.isfile(os.path.join(caminho, f)):
+        for f in os.listdir(input_path):
+            if os.path.isfile(os.path.join(input_path, f)):
                 status = run_with_limits_linux(
                     executable=file_path,
                     input_file=os.path.join(input_path, f),
