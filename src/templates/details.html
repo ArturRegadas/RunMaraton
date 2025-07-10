@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-br" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Juiz Online - Estilo LeetCode</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              primary: '#1A1A1A',
+              accent: '#F59E0B',
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      html, body {
+        height: 100%;
+        margin: 0;
+      }
+      #editor {
+        height: 400px;
+        width: 100%;
+      }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.44.0/min/vs/loader.js"></script>
+  </head>
+  <body class="bg-gray-100 dark:bg-zinc-900 text-gray-900 dark:text-white">
+    <div class="max-w-7xl mx-auto p-4">
+      <header class="flex items-center justify-between mb-6">
+        <h1 class="text-2xl font-bold">Juiz Online</h1>
+      </header>
+
+      
+          <div class="bg-zinc-100 dark:bg-zinc-800 p-4 rounded shadow">
+            <div style="display: flex;">
+              <h3 class="font-semibold mb-2" style="display: flex;margin-right: 30px;">Resultado </h3><h3 class="font-semibold mb-2" id="answer"></h3>
+            </div>
+            <div>
+              <!-- Saída do Usuário -->
+              <div style="margin-bottom: 50px;" class="flex-1 bg-zinc-200 dark:bg-zinc-700 p-3 rounded">
+                <h4 class="text-red-500 font-medium mb-1"></h4>
+                <pre id="user-output" class="text-sm whitespace-pre-wrap break-words text-red-400">{{user_submission}}</pre>
+              </div>
+              <!-- Saída Esperada -->
+              <div  class="flex-1 bg-zinc-200 dark:bg-zinc-700 p-3 rounded">
+                <h4 class="text-green-500 font-medium mb-1"></h4>
+                <pre id="expected-output" class="text-sm whitespace-pre-wrap break-words text-green-400">{{expected_submission}}</pre>
+              </div>
+            </div>
+          </div>
+
+
+        </section>
+      </div>
+    </div>
+
+  </body>
+</html>

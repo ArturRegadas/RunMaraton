@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-br" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <title>Problemas - Juiz Online</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            easy: '#22c55e',
+            medium: '#facc15',
+            hard: '#ef4444'
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-zinc-900 text-white p-8">
+  <div class="max-w-5xl mx-auto">
+    <h1 class="text-3xl font-bold mb-6">Lista de Provas</h1>
+
+    <table class="w-full table-auto text-left bg-zinc-800 rounded-lg overflow-hidden shadow">
+      <thead class="bg-zinc-700 text-gray-300 text-sm uppercase">
+        <tr>
+          <th class="px-4 py-2">#</th>
+          <th class="px-4 py-2">TÍTULO</th>
+          <th class="px-4 py-2">{{case}}</th>
+        </tr>
+      </thead>
+      <tbody id="problem-table" class="text-sm divide-y divide-zinc-700">
+        <!-- preenchido por JS -->
+         {% for i in tests %}
+          <tr>
+            <td class="px-4 py-3">{{ loop.index }}</td>  {# loop.index é 1-based; loop.index0 seria 0-based #}
+            <td class="px-4 py-3">
+              <a href="/{{page}}/{{ i['id'] }}" class="text-blue-400 hover:underline">
+                {{ i['title'] }}
+              </a>
+            </td>
+            <td class="px-4 py-3 font-semibold">{{ i['questoes'] }}</td>
+          </tr>
+        {% endfor %}
+
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+  </script>
+</body>
+</html>

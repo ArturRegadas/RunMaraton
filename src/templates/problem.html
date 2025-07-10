@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="pt-br" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Juiz Online - Estilo LeetCode</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              primary: '#1A1A1A',
+              accent: '#F59E0B',
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      html, body {
+        height: 100%;
+        margin: 0;
+      }
+      #editor {
+        height: 400px;
+        width: 100%;
+      }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.44.0/min/vs/loader.js"></script>
+  </head>
+  <body class="bg-gray-100 dark:bg-zinc-900 text-gray-900 dark:text-white">
+    <div class="max-w-7xl mx-auto p-4">
+      <header class="flex items-center justify-between mb-6">
+        <h1 class="text-2xl font-bold" id="problemH1">{{problemId}}</h1>
+        <h1 style="color:#00d062;">{{ended}}</h1>
+        <select id="language-select"
+              class="px-3 py-2 rounded border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-gray-900 dark:text-white"
+              style="height: 40px; font-size: 15px;">
+              <option value="c">C</option>
+              <option value="cpp" selected>C++</option>
+              <option value="python">Python</option>
+            </select>
+      </header>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <!-- Descrição do problema -->
+        <iframe
+          class="lg:col-span-1 bg-white dark:bg-zinc-800 rounded-xl p-4 shadow"
+          src="{{ url_for('static', filename=filePdf) }}"
+          width="100%"
+          height="555px"
+          style="margin: 0px; border-radius: 4px; border: none; width: 590px;"
+        ></iframe>
+
+        <!-- Editor + Console -->
+        <section class="lg:col-span-2 flex flex-col gap-4" style="margin-left: 200px;height: 535px;">
+          <!-- ComboBox de linguagem -->
+
+          <!-- Editor de código -->
+          <div id="editor" class="rounded border border-zinc-300 dark:border-zinc-700"
+            style="padding: 10px; background-color: #1e1e1e;"></div>
+
+          <!-- Botão Submeter -->
+           <div style="display: flex ;">
+
+             <button style="margin-right: 30px;" onclick="submitCode()" class="self-start bg-accent text-white px-6 py-2 rounded hover:bg-yellow-500">
+               Submeter
+              </button>
+              <a href="/seeDetails/{{username}}" target="_blank" rel="noopener noreferrer" id="see_details"></a>
+              
+            </div>
+          <!-- Área de saída -->
+          <!-- Área de saída -->
+          <div class="bg-zinc-100 dark:bg-zinc-800 p-4 rounded shadow">
+            <div style="display: flex;">
+              <h3 class="font-semibold mb-2" style="display: flex;margin-right: 30px;">Resultado: </h3><h3 class="font-semibold mb-2" id="answer"></h3>
+            </div>
+            <div class="flex flex-col lg:flex-row gap-4">
+              <!-- Saída do Usuário -->
+              <div class="flex-1 bg-zinc-200 dark:bg-zinc-700 p-3 rounded">
+                <h4 class="text-red-500 font-medium mb-1"></h4>
+                <pre id="user-output" class="text-sm whitespace-pre-wrap break-words text-red-400">Sem submissão</pre>
+              </div>
+              <!-- Saída Esperada -->
+              <div class="flex-1 bg-zinc-200 dark:bg-zinc-700 p-3 rounded">
+                <h4 class="text-green-500 font-medium mb-1"></h4>
+                <pre id="expected-output" class="text-sm whitespace-pre-wrap break-words text-green-400">Sem submissão</pre>
+              </div>
+            </div>
+          </div>
+
+
+        </section>
+      </div>
+    </div>
+
+    <script>
+
+      // Carregando Monaco
+      require.config({ paths: { vs: "https://cdn.jsdelivr.net/npm/monaco-editor@0.44.0/min/vs" } });
+
+      require(["vs/editor/editor.main"], function () {
+        const langSelect = document.getElementById("language-select");
+        const initialLang = langSelect.value;
+
+        window.editor = monaco.editor.create(document.getElementById("editor"), {
+          value: getDefaultTemplate(initialLang),
+          language: initialLang,
+          theme: "vs-dark",
+          automaticLayout: true,
+        });
+
+        langSelect.addEventListener("change", function () {
+          const newLang = this.value;
+          const model = editor.getModel();
+          monaco.editor.setModelLanguage(model, newLang);
+          editor.setValue(getDefaultTemplate(newLang));
+        });
+      });
+
+      // Código padrão por linguagem
+      function getDefaultTemplate(lang) {
+        switch (lang) {
+          case "c":
+            return `#include <stdio.h>\n\nint main() {\n    //digite seu codigo aqui\n\n    return 0;\n}`;
+          case "cpp":
+            return `#include <iostream>\nusing namespace std;\n\nint main() {\n    //digite seu codigo aqui\n\n    return 0;\n}`;
+          case "python":
+            return `# Digite seu código aqui\n`;
+          default:
+            return "";
+        }
+      }
+  
+        function submitCode() {
+          const code = editor.getValue();
+          const lenguage = document.getElementById("language-select").value;
+
+          const url = '/submit';
+          const dados = {
+            code: code,
+            lenguage: lenguage,
+            problem: document.getElementById("problemH1").innerHTML
+
+          };
+
+          // Mostrar overlay
+          document.getElementById("loading-overlay").classList.remove("hidden");
+
+          fetch(url, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(dados)
+          })
+          .then(response => response.json())
+          .then(data => {
+            const answer = document.getElementById("answer");
+            answer.textContent = data.status;
+            answer.style.color = data.color;
+            document.getElementById("see_details").className ="";
+            document.getElementById("see_details").innerHTML="";
+            if(data.status == "WRONG ANSWER" || data.status == "PRESENTATION ERROR"){
+              document.getElementById("see_details").className ="self-start bg-accent text-white px-6 py-2 rounded hover:bg-yellow-500"
+              document.getElementById("see_details").innerHTML="Ver Detalhes"
+              document.getElementById("user-output").textContent = data.user_output;
+              document.getElementById("expected-output").textContent = data.expected_output;
+            }
+          })
+          .catch(err => {
+            document.getElementById("user-output").textContent = "Erro ao submeter.";
+            document.getElementById("expected-output").textContent = "";
+            console.error(err);
+          })
+          .finally(() => {
+            // Esconder overlay
+            setTimeout(() => {
+              document.getElementById("loading-overlay").classList.add("hidden");
+            }, 800); // atraso para deixar mais suave
+          });
+        }
+
+
+
+    </script>
+  </body>
+  <!-- Tela de Carregamento -->
+<div id="loading-overlay" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+  <div class="flex flex-col items-center">
+    <svg class="animate-spin h-10 w-10 text-yellow-400 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+    </svg>
+    <span class="text-white text-lg font-semibold">Analisando código...</span>
+  </div>
+</div>
+
+</html>

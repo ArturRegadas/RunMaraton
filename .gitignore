@@ -3,6 +3,12 @@ __pycache__/
 *.py[codz]
 *$py.class
 
+#db
+dbInfo.py
+
+#docker
+docker-compose.yml
+
 # C extensions
 *.so
 
