@@ -143,10 +143,18 @@ def login():
 @app.route("/")
 def home():
     tests = [
+        { "id": "2025L", "title": "INTERIF 2025 - Fase Local", "questoes": 10 },
+
         { "id": "2024F", "title": "INTERIF 2024 - Fase Final", "questoes": 10 },
         { "id": "2024L", "title": "INTERIF 2024 - Fase Local", "questoes": 10 },
+
         { "id": "2023F", "title": "INTERIF 2023 - Fase Final", "questoes": 8 },
-        { "id": "2023L", "title": "INTERIF 2023 - Fase Local", "questoes": 9 }
+        { "id": "2023L", "title": "INTERIF 2023 - Fase Local", "questoes": 8 },
+
+        { "id": "2022F", "title": "INTERIF 2022 - Fase Final", "questoes": 8 },
+        { "id": "2022L", "title": "INTERIF 2022 - Fase Local", "questoes": 8 },
+
+        { "id": "2021F", "title": "INTERIF 2021 - Fase Final", "questoes": 13 }
     ]
     username = request.cookies.get("username")
     password = request.cookies.get("password")

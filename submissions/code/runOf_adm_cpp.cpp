@@ -1,8 +1,12 @@
-#include <iostream>
+#include <bits/stdc++.h>
+using namespace std;
+
 using namespace std;
 
 int main() {
-    //digite seu codigo aqui
+    string a;
+    cin>>a;
+    cout<<a[1]<<endl;
 
     return 0;
 }
