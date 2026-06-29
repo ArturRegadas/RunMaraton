@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 import os
-from src.support.dbInfo import user, password, DBname
+#from dbInfo import user, password, DBname
 
 app = Flask(__name__)
 

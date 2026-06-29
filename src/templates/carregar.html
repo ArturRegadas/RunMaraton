@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+<meta charset="UTF-8">
+<title>Importar Casos de Teste</title>
+
+<style>
+
+body{
+    font-family:Arial, Helvetica, sans-serif;
+    background:#f2f2f2;
+    margin:0;
+    padding:40px;
+}
+
+.card{
+    max-width:850px;
+    margin:auto;
+    background:white;
+    padding:30px;
+    border-radius:10px;
+    box-shadow:0 2px 10px rgba(0,0,0,.15);
+}
+
+h1{
+    margin-top:0;
+}
+
+.info{
+    background:#eef6ff;
+    border-left:5px solid #2196F3;
+    padding:15px;
+    margin:20px 0;
+}
+
+pre{
+    background:#222;
+    color:#eee;
+    padding:15px;
+    border-radius:6px;
+    overflow:auto;
+}
+
+input[type=file]{
+    width:100%;
+    padding:12px;
+    margin-top:20px;
+    margin-bottom:20px;
+}
+
+button{
+    width:100%;
+    padding:14px;
+    font-size:16px;
+    border:none;
+    border-radius:5px;
+    background:#1976d2;
+    color:white;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#125ca8;
+}
+
+ul{
+    color:#d32f2f;
+}
+
+code{
+    background:#eee;
+    padding:2px 4px;
+    border-radius:4px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="card">
+
+<h1>Importador de Casos de Teste</h1>
+
+<div class="info">
+
+<p>
+Selecione um <strong>arquivo ZIP</strong> contendo a pasta
+<strong>AAAA</strong> (representando o ano ou identificador).
+</p>
+
+<p>
+O sistema detecta automaticamente:
+</p>
+
+<ul>
+<li style="color: #333;">O ano ou identificador da competição.</li>
+<li style="color: #333;">Se os exercícios pertencem à Fase Final ou Fase Local.</li>
+<li style="color: #333;">As letras dos exercícios.</li>
+</ul>
+
+</div>
+
+<h2>Estrutura esperada</h2>
+
+<p>O ZIP deve conter exatamente uma pasta principal com 4 caracteres:</p>
+
+<pre>2024/
+</pre>
+
+<p>Dentro dela podem existir as pastas:</p>
+
+<pre>2024/
+├── Fase Final/
+└── Fase Local/
+</pre>
+
+<p>Ou, caso não existam, todos os exercícios serão considerados da <strong>Fase Final</strong>:</p>
+
+<pre>2024/
+├── A-matematica.zip
+├── B-grafos.zip
+└── C-geometria.zip
+</pre>
+
+<h2>Estrutura de cada exercício</h2>
+
+<pre>A-matematica.zip
+├── description/
+│   ├── problem.info
+│   └── INTERIF2024.pdf
+├── input/
+├── output/
+└── limits/
+    └── c
+</pre>
+<hr>
+
+<h2>Convenções de nomenclatura</h2>
+
+<h3>Pasta principal</h3>
+
+<p>O arquivo enviado deve ser um <strong>ZIP</strong> contendo exatamente uma pasta principal no formato:</p>
+
+<pre>AAAA</pre>
+
+<p>Onde <code>AAAA</code> representa obrigatoriamente um identificador de exatamente 4 caracteres:</p>
+<ul>
+    <li style="color: #333;">Para problemas do INTERIF: deve ser um ano composto por 4 algarismos (ex: <code>2024</code>).</li>
+    <li style="color: #333;">Para problemas que <strong>não</strong> são do INTERIF: pode ser qualquer combinação de 4 letras ou algarismos (ex: <code>MARS</code>, <code>0000</code>, <code>TEST</code>).</li>
+</ul>
+
+<p>Exemplos de pastas válidas:</p>
+
+<pre>2024
+MARS
+0000
+</pre>
+
+<hr>
+
+<h3>Pastas de fase</h3>
+
+<p>Opcionalmente podem existir as seguintes pastas:</p>
+
+<pre>Fase Final
+Fase Local
+</pre>
+
+<p>Os nomes devem ser exatamente esses.</p>
+
+<p>Se nenhuma delas existir, todos os exercícios serão considerados pertencentes à <strong>Fase Final</strong>.</p>
+
+<hr>
+
+<h3>ZIPs dos exercícios</h3>
+
+<p>Cada exercício deve estar em um arquivo ZIP separado e deve seguir <strong>OBRIGATORIAMENTE</strong> o seguinte formato:</p>
+
+<pre>{LETRA_MAIUSCULA}-nome.zip</pre>
+
+<p>Exemplos válidos:</p>
+<pre>A-matematica.zip
+B-grafos.zip
+C-exercicio1.zip
+D-problema-de-teste.zip
+</pre>
+
+<p>Exemplos inválidos (serão ignorados pelo importador):</p>
+<pre>a-matematica.zip (letra minúscula)
+A_matematica.zip (usa underline em vez de hífen)
+A.zip (falta o hífen e o nome)
+ProblemaA.zip (formato incorreto)
+</pre>
+
+<p>O importador utiliza apenas a letra antes do primeiro hífen para identificar o exercício e o restante para identificar o nome/slug.</p>
+
+<hr>
+
+<h3>Pastas obrigatórias dentro do ZIP do exercício</h3>
+
+<pre>description
+input
+output
+limits
+</pre>
+
+<p>Os nomes devem ser exatamente esses (inclusive letras minúsculas).</p>
+
+<hr>
+
+<h3>Arquivo <code>problem.info</code></h3>
+
+<p>Deve existir exatamente neste local:</p>
+
+<pre>description/problem.info</pre>
+
+<p>Conteúdo esperado:</p>
+
+<pre>basename=matematica
+fullname=Matemática
+descfile=INTERIF2024.pdf
+</pre>
+
+<table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse;width:100%">
+<tr>
+    <th>Campo</th>
+    <th>Obrigatório</th>
+    <th>Descrição</th>
+</tr>
+<tr>
+    <td>basename</td>
+    <td>Sim</td>
+    <td>Nome interno do problema (não é utilizado pelo importador).</td>
+</tr>
+<tr>
+    <td>fullname</td>
+    <td>Sim</td>
+    <td>Nome completo do problema. Será gravado em <code>src/info.txt</code>.</td>
+</tr>
+<tr>
+    <td>descfile</td>
+    <td>Sim</td>
+    <td>Nome do PDF existente dentro da pasta <code>description</code>.</td>
+</tr>
+</table>
+
+<hr>
+
+<h3>Arquivo PDF</h3>
+
+<p>O PDF pode possuir qualquer nome, porém ele deve ser exatamente igual ao valor informado em <code>descfile</code>.</p>
+
+<p>Exemplo:</p>
+
+<pre>description/
+├── problem.info
+└── INTERIF2024.pdf
+</pre>
+
+<hr>
+
+<h3>Pasta <code>limits</code></h3>
+
+<p>Deve existir exatamente:</p>
+
+<pre>limits/
+└── c
+</pre>
+
+<p>O arquivo deve se chamar exatamente <strong>c</strong>.</p>
+
+<p>Conteúdo esperado:</p>
+
+<pre>echo 1
+echo 1
+echo 512
+echo 55
+exit 0
+</pre>
+
+<p>Os quatro valores representam:</p>
+
+<ol>
+<li>Tempo limite (segundos)</li>
+<li>Número de repetições</li>
+<li>Limite de memória (MB)</li>
+<li>Limite de saída (KB)</li>
+</ol>
+
+<hr>
+
+<h3>Pasta <code>input</code></h3>
+
+<p>Deve conter todos os casos de entrada.</p>
+
+<p>Os arquivos podem possuir qualquer nome.</p>
+
+<p>Exemplos:</p>
+
+<pre>input/
+├── 1
+├── 2
+├── 3
+└── 4
+</pre>
+
+<p>ou</p>
+
+<pre>input/
+├── 001.in
+├── 002.in
+└── 003.in
+</pre>
+
+<hr>
+
+<h3>Pasta <code>output</code></h3>
+
+<p>Deve conter as respostas correspondentes aos arquivos presentes em <code>input</code>.</p>
+
+<p>Os nomes devem corresponder aos arquivos de entrada.</p>
+
+<p>Exemplos:</p>
+
+<pre>output/
+├── 1
+├── 2
+├── 3
+└── 4
+</pre>
+
+<p>ou</p>
+
+<pre>output/
+├── 001.out
+├── 002.out
+└── 003.out
+</pre>
+
+<hr>
+
+<h2>Arquivos gerados pelo importador</h2>
+
+<p>Após a importação, o sistema criará automaticamente:</p>
+
+<pre>static/
+└── ANOFLETRA.pdf
+
+problems/
+└── ANOFLETRA/
+    ├── inputs/
+    ├── outputs/
+    └── limits.json
+
+src/
+└── info.txt
+</pre>
+
+<p>Exemplo:</p>
+
+<pre>static/
+└── 2024FA.pdf
+
+problems/
+└── 2024FA/
+    ├── inputs/
+    ├── outputs/
+    └── limits.json
+
+src/info.txt
+</pre>
+
+<p>Onde:</p>
+
+<ul>
+<li style="color: #333;"><strong>2024 / AAAA</strong> → ano ou identificador da competição.</li>
+<li style="color: #333;"><strong>F</strong> → Fase Final.</li>
+<li style="color: #333;"><strong>L</strong> → Fase Local.</li>
+<li style="color: #333;"><strong>A</strong> → letra do exercício.</li>
+</ul>
+
+<p>O arquivo <code>limits.json</code> terá o formato:</p>
+
+<pre>{
+    "time": "1",
+    "number_of_repetitions": "1",
+    "memory_limit_MB": "512",
+    "output_limit_KB": "55"
+}
+</pre>
+
+<p>O arquivo <code>src/info.txt</code> receberá uma linha para cada exercício:</p>
+
+<pre>2024FA = Matemática
+MARSFA = Nome do Exercício
+</pre>
+
+<hr>
+
+<h2>Observações Importantes</h2>
+
+<ul>
+<li style="color: #333;">Todos os nomes de pastas e arquivos obrigatórios diferenciam letras maiúsculas e minúsculas.</li>
+<li style="color: #333;">Arquivos ou pastas com nomes diferentes dos especificados poderão impedir a importação do exercício.</li>
+<li style="color: #333;">Os arquivos da pasta <code>input</code> e da pasta <code>output</code> são copiados exatamente como estão, sem renomeação.</li>
+<li style="color: #333;">Se algum exercício estiver incompleto ou inválido, apenas ele será ignorado; os demais continuarão sendo importados normalmente.</li>
+</ul>
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<div class="info" style="background:#fff3cd;border-left-color:#ff9800;">
+<ul style="color: #666;">
+{% for m in messages %}
+<li>{{ m }}</li>
+{% endfor %}
+</ul>
+</div>
+{% endif %}
+{% endwith %}
+
+<form method="POST" enctype="multipart/form-data">
+
+<input
+type="file"
+name="file"
+accept=".zip"
+required>
+
+<button type="submit">
+Importar Casos de Teste
+</button>
+
+</form>
+
+</div>
+
+</body>
+
+</html>

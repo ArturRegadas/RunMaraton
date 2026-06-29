@@ -1,26 +1,37 @@
-version: '3.9'
+version: "3.9"
 
 services:
-  web:
-    build: .
-    ports:
-      - "5000:5000"
-    volumes:
-      - .:/app
-    depends_on:
-      - db
-    environment:
-      - FLASK_ENV=development
-      - DATABASE_URL=postgresql://postgres:abc2109@db:5432/maratondb
-
   db:
     image: postgres:15
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: abc2109
       POSTGRES_DB: maratondb
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
     volumes:
       - pgdata:/var/lib/postgresql/data
+
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+
+    volumes:
+      - .:/app
+
+    depends_on:
+      db:
+        condition: service_healthy
+
+    environment:
+      FLASK_ENV: development
+      DATABASE_URL: postgresql://postgres:abc2109@db:5432/maratondb
 
 volumes:
   pgdata:
