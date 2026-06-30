@@ -36,7 +36,7 @@ def RunSubimission(code, lenguage, problem, user):
         data["output_limit_KB"] = 1024
 
     if lenguage == "python":
-        data["time"]+=2
+        data["time"]= int(data["time"])+2
     return Run(
         file_path,
         os.path.join(current_path, "problems", problem, "inputs",),
