@@ -61,7 +61,7 @@ def run_with_limits_linux(
     output_limit_bytes = output_limit_KB * 1024
 
     try:
-        for _ in range(number_of_repetitions):
+        for _ in range(int(number_of_repetitions)):
             with open(input_file, 'rb') as f_in:
                 cmd = build_command(executable)
                 proc = subprocess.Popen(
@@ -103,6 +103,7 @@ def run_with_limits_linux(
             return WRONG_ANSWER
 
     except Exception as e:
+        print(str(e), flush=True)
         return INTERNAL_ERROR
     
 

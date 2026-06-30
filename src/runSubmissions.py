@@ -39,12 +39,12 @@ def RunSubimission(code, lenguage, problem, user):
         data["time"]+=2
     return Run(
         file_path,
-        os.path.join(current_path, "problems", problem, "input",),
-        os.path.join(current_path, "problems", problem, "output",),
-        data["time"],
-        data["number_of_repetitions"],
-        data["memory_limit_MB"],
-        data["output_limit_KB"],
+        os.path.join(current_path, "problems", problem, "inputs",),
+        os.path.join(current_path, "problems", problem, "outputs",),
+        int(data["time"]),
+        int(data["number_of_repetitions"]),
+        int(data["memory_limit_MB"]),
+        int(data["output_limit_KB"]),
         user
     )
 #run.o or run.py

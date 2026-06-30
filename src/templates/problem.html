@@ -151,12 +151,12 @@
   
         function submitCode() {
           const code = editor.getValue();
-          const lenguage = document.getElementById("language-select").value;
+          const language = document.getElementById("language-select").value;
 
           const url = '/submit';
           const dados = {
             code: code,
-            lenguage: lenguage,
+            language: language,
             problem: document.getElementById("problemH1").innerHTML
 
           };
